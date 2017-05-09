@@ -11,14 +11,14 @@ $ python pack_bot.py http://pkit.wopr.c2x.io:8000/suitcases/rolly http://pkit.wo
 
 def pack_bot_ortools(parts, volume_avail):
 
+	from ortools.algorithms import pywrapknapsack_solver
+
 #   name:    pack_bot_ortools
 #   args:    parts        -- list of parts with "value", "id", "volume"
 #            volume_avail -- integer value for total volume available
 #   returns: dict containing list of final parts and total value
 #   description: uses google's ortools knapsack problem solver to solve
 #	 			 the bin packing problem using a dynamic programming soln.
-
-	from ortools.algorithms import pywrapknapsack_solver
 
 	solver = pywrapknapsack_solver.KnapsackSolver(
       pywrapknapsack_solver.KnapsackSolver.
@@ -43,6 +43,7 @@ def pack_bot_ortools(parts, volume_avail):
 	final_parts["value"]    = sum(p['value']  for p in packed_items)
 
 	return final_parts
+
 
 
 def dynamic_prog_pack_bot(parts, volume_avail):
@@ -87,12 +88,15 @@ def dynamic_prog_pack_bot(parts, volume_avail):
 
 	return final_parts
 
+
+
 def jsons_same_test(first_json, second_json): 
 
 	values_same = first_json['value'] == second_json['value']
 	parts_same  = len(set(first_json['part_ids']) & set(second_json['part_ids'])) == len(set(first_json['part_ids']))
-
 	print "Parts same? " + str(parts_same) + " Values same? " + str(values_same)
+
+
 
 if __name__ == "__main__":
 
