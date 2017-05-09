@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/noahepstein/GD/Jobs/Mayfield_Robotics/mayfield/rotate/src/rotate.cpp
+iostream
+-
+vector
+-
+math.h
+-
+
