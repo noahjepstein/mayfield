@@ -1,5 +1,4 @@
 import urllib, json, sys
-from ortools.algorithms import pywrapknapsack_solver
 
 usage_str = """Usage:
 
@@ -18,6 +17,8 @@ def pack_bot_ortools(parts, volume_avail):
 #   returns: dict containing list of final parts and total value
 #   description: uses google's ortools knapsack problem solver to solve
 #	 			 the bin packing problem using a dynamic programming soln.
+
+	from ortools.algorithms import pywrapknapsack_solver
 
 	solver = pywrapknapsack_solver.KnapsackSolver(
       pywrapknapsack_solver.KnapsackSolver.
@@ -91,36 +92,36 @@ def jsons_same_test(first_json, second_json):
 	values_same = first_json['value'] == second_json['value']
 	parts_same  = len(set(first_json['part_ids']) & set(second_json['part_ids'])) == len(set(first_json['part_ids']))
 
-	print "Values same? " + str(values_same)
-	print "Parts same? " + str(parts_same)
-
-	return parts_same and values_same
-
+	print "Parts same? " + str(parts_same) + " Values same? " + str(values_same)
 
 if __name__ == "__main__":
+
+	without_ortools = False
+	
 	try: 
 		if len(sys.argv) == 3: 
 			suitcase_url = sys.argv[1]
 			parts_url    = sys.argv[2]
 		elif len(sys.argv) == 4: 
-			print "what"
 			if not sys.argv[1] == "--without-ortools": 
 				raise TypeError
 			suitcase_url = sys.argv[2]
 			parts_url    = sys.argv[3]
+			without_ortools = True
 		
 		suitcase_json = urllib.urlopen(suitcase_url)
 		suitcase = json.loads(suitcase_json.read())
 
 		parts_json = urllib.urlopen(parts_url)
 		parts = json.loads(parts_json.read())
-		ortools_json = pack_bot_ortools(parts, suitcase['volume'])
+
 		dp_json = dynamic_prog_pack_bot(parts, suitcase['volume'])
 
-		if jsons_same_test(ortools_json, dp_json): 
-			print ortools_json
-		else: 
-			print "Something went wrong..."
+		if not without_ortools: 
+			ortools_json = pack_bot_ortools(parts, suitcase['volume'])
+			# jsons_same_test(ortools_json, dp_json)
+
+		print str(dp_json)
 
 	except Exception, e: 
 		print "An exception occurred with value " + str(e)
